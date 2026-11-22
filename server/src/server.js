@@ -14,7 +14,13 @@ async function connectDatabase() {
       console.log('MongoDB connected');
       return;
     } catch (error) {
-      console.error('MongoDB connection failed:', error.message);
+      console.error('MongoDB connection failed:', {
+        name: error.name,
+        message: error.message,
+        code: error.code,
+        causeCode: error.cause?.code,
+        causeMessage: error.cause?.message
+      });
       await new Promise((resolve) => setTimeout(resolve, 10000));
     }
   }
