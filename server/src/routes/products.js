@@ -33,6 +33,9 @@ router.post('/upload', authenticateAdmin, upload.single('image'), (req, res) => 
 });
 router.get('/', async (req, res, next) => {
   try {
+    if (mongoose.connection.readyState !== 1) {
+      return res.status(503).json({ message: 'Database is temporarily unavailable. Please try again shortly.' });
+    }
     const { search, gender, brand, size, min, max, featured, isNew, page = 1, limit = 12 } = req.query;
     const filter = {};
     if (search) filter.$text = { $search: String(search) };

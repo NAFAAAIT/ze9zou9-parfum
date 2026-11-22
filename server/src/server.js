@@ -6,6 +6,18 @@ const port = process.env.PORT || 5000;
 
 app.listen(port, () => console.log(`API listening on ${port}`));
 
-mongoose.connect(process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ze9zou9_parfum')
-  .then(() => console.log('MongoDB connected'))
-  .catch((error) => console.error('MongoDB connection failed:', error.message));
+async function connectDatabase() {
+  const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ze9zou9_parfum';
+  while (mongoose.connection.readyState !== 1) {
+    try {
+      await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+      console.log('MongoDB connected');
+      return;
+    } catch (error) {
+      console.error('MongoDB connection failed:', error.message);
+      await new Promise((resolve) => setTimeout(resolve, 10000));
+    }
+  }
+}
+
+connectDatabase();
