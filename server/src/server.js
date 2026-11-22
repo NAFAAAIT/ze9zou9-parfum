@@ -19,7 +19,12 @@ async function connectDatabase() {
         message: error.message,
         code: error.code,
         causeCode: error.cause?.code,
-        causeMessage: error.cause?.message
+        causeMessage: error.cause?.message,
+        reasonType: error.reason?.type,
+        reasonMessage: error.reason?.message,
+        reasonServers: error.reason?.servers
+          ? Object.fromEntries(error.reason.servers.entries())
+          : undefined
       });
       await new Promise((resolve) => setTimeout(resolve, 10000));
     }
