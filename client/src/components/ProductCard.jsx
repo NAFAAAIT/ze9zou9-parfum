@@ -2,16 +2,21 @@ import { Link } from 'react-router-dom';
 import { ShoppingBag } from 'lucide-react';
 import { motion } from 'framer-motion';
 import { useCart } from '../context/CartContext';
+import { useLanguage } from '../context/LanguageContext';
 
 export default function ProductCard({ product }) {
   const { add } = useCart();
+  const { language } = useLanguage();
+  const fr = language === 'fr';
   const price = Math.round(product.price * (1 - product.discount / 100));
-  const gender = { Men: 'Hommes', Women: 'Femmes', Unisex: 'Mixte' }[product.gender] || product.gender;
+  const gender = fr
+    ? ({ Men: 'Hommes', Women: 'Femmes', Unisex: 'Mixte' }[product.gender] || product.gender)
+    : ({ Men: 'Men', Women: 'Women', Unisex: 'Unisex' }[product.gender] || product.gender);
   return (
     <motion.article whileHover={{ y: -6 }} transition={{ duration: 0.25, ease: 'easeOut' }} className="group">
       <Link to={`/perfumes/${product._id}`} className="relative block overflow-hidden bg-[#eee8df]">
         <img src={product.images[0]} alt={product.name} className="aspect-[4/5] w-full object-cover transition duration-700 group-hover:scale-105" />
-        {product.isNew && <span className="absolute left-3 top-3 bg-cream px-3 py-1 text-[10px] uppercase tracking-widest text-plum">Nouveau</span>}
+        {product.isNew && <span className="absolute left-3 top-3 bg-cream px-3 py-1 text-[10px] uppercase tracking-widest text-plum">{fr ? 'Nouveau' : 'New'}</span>}
       </Link>
       <div className="pt-4">
         <p className="text-[10px] uppercase tracking-[.2em] text-copper">{product.brand} · {gender}</p>
