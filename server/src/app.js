@@ -20,7 +20,20 @@ app.use(helmet({
     }
   }
 }));
-app.use(cors({ origin: process.env.CLIENT_URL || 'http://localhost:5173' }));
+app.set('trust proxy', 1);
+const allowedOrigins = [
+  process.env.CLIENT_URL,
+  'http://localhost:5173',
+  'https://ze9zou9parfum.vercel.app'
+].filter(Boolean);
+app.use(cors({
+  origin: (origin, callback) => {
+    if (!origin || allowedOrigins.includes(origin) || origin.endsWith('.vercel.app')) {
+      return callback(null, true);
+    }
+    return callback(Object.assign(new Error('Origin not allowed.'), { status: 403 }));
+  }
+}));
 app.use(express.json({ limit: '100kb' }));
 app.use(morgan('tiny'));
 app.use('/uploads', express.static(path.resolve(process.cwd(), 'uploads')));
