@@ -23,7 +23,19 @@ async function connectDatabase() {
         reasonType: error.reason?.type,
         reasonMessage: error.reason?.message,
         reasonServers: error.reason?.servers
-          ? Object.fromEntries(error.reason.servers.entries())
+          ? Object.fromEntries(
+              Array.from(error.reason.servers.entries(), ([address, server]) => [
+                address,
+                {
+                  address: server.address,
+                  type: server.type,
+                  roundTripTime: server.roundTripTime,
+                  error: server.error
+                    ? { name: server.error.name, message: server.error.message, code: server.error.code }
+                    : undefined
+                }
+              ])
+            )
           : undefined
       });
       await new Promise((resolve) => setTimeout(resolve, 10000));
