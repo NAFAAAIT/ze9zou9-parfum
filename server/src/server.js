@@ -10,7 +10,10 @@ async function connectDatabase() {
   const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/ze9zou9_parfum';
   while (mongoose.connection.readyState !== 1) {
     try {
-      await mongoose.connect(uri, { serverSelectionTimeoutMS: 10000 });
+      await mongoose.connect(uri, {
+        serverSelectionTimeoutMS: 15000,
+        maxPoolSize: 5
+      });
       console.log('MongoDB connected');
       return;
     } catch (error) {
@@ -24,22 +27,22 @@ async function connectDatabase() {
         reasonMessage: error.reason?.message,
         reasonServers: error.reason?.servers
           ? Object.fromEntries(
-              Array.from(error.reason.servers.entries(), ([address, server]) => [
-                address,
-                {
-                  address: server.address,
-                  type: server.type,
-                  roundTripTime: server.roundTripTime,
-                  error: server.error
-                    ? JSON.stringify({
-                        name: server.error.name,
-                        message: server.error.message,
-                        code: server.error.code
-                      })
-                    : undefined
-                }
-              ])
-            )
+            Array.from(error.reason.servers.entries(), ([address, server]) => [
+              address,
+              {
+                address: server.address,
+                type: server.type,
+                roundTripTime: server.roundTripTime,
+                error: server.error
+                  ? JSON.stringify({
+                    name: server.error.name,
+                    message: server.error.message,
+                    code: server.error.code
+                  })
+                  : undefined
+              }
+            ])
+          )
           : undefined
       });
       await new Promise((resolve) => setTimeout(resolve, 10000));
