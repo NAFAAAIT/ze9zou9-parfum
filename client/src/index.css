@@ -5,3 +5,11 @@
 @layer base { body { @apply bg-cream text-plum font-sans antialiased dark:bg-[#1b0c1a] dark:text-cream; } * { @apply border-plum/10 dark:border-cream/10; } }
 @layer components { .container-luxury { @apply mx-auto max-w-7xl px-5 sm:px-8; } .btn-primary { @apply inline-flex items-center justify-center bg-copper px-6 py-3 text-xs font-semibold uppercase tracking-[.18em] text-white transition hover:bg-plum focus:outline-none focus:ring-2 focus:ring-gold; } .eyebrow { @apply text-xs uppercase tracking-[.3em] text-copper; } }
 html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    scroll-behavior: auto !important;
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
