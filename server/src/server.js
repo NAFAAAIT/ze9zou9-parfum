@@ -31,7 +31,11 @@ async function connectDatabase() {
                   type: server.type,
                   roundTripTime: server.roundTripTime,
                   error: server.error
-                    ? { name: server.error.name, message: server.error.message, code: server.error.code }
+                    ? JSON.stringify({
+                        name: server.error.name,
+                        message: server.error.message,
+                        code: server.error.code
+                      })
                     : undefined
                 }
               ])
