@@ -1,0 +1,11 @@
+import 'dotenv/config';
+import mongoose from 'mongoose';
+import bcrypt from 'bcryptjs';
+import readline from 'node:readline/promises';
+import Admin from './models/Admin.js';
+const input = readline.createInterface({ input: process.stdin, output: process.stdout });
+const email = process.env.ADMIN_EMAIL || await input.question('Admin email: ');
+const password = process.env.ADMIN_PASSWORD || await input.question('Admin password: ');
+await mongoose.connect(process.env.MONGO_URI);
+await Admin.findOneAndUpdate({ email }, { email, passwordHash: await bcrypt.hash(password, 12) }, { upsert: true, new: true, setDefaultsOnInsert: true });
+console.log('Admin created.'); await mongoose.disconnect(); input.close();

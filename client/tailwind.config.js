@@ -1,0 +1,1 @@
+export default { content: ['./index.html', './src/**/*.{js,jsx}'], theme: { extend: { colors: { cream: '#FAF7F2', plum: '#2D142C', copper: '#B85D19', gold: '#E5C18F' }, fontFamily: { display: ['Cormorant Garamond', 'serif'], sans: ['Inter', 'sans-serif'] } } }, darkMode: 'class' };
