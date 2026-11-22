@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import { ArrowRight } from 'lucide-react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import { api } from '../services/api';
 import ProductCard from '../components/ProductCard';
 import { useLanguage } from '../context/LanguageContext';
@@ -10,6 +10,25 @@ export default function Home() {
   const [featured, setFeatured] = useState([]);
   const { language } = useLanguage();
   const fr = language === 'fr';
+  const hero = fr
+    ? {
+        image: '/images/products/noir-sillage.jpg',
+        eyebrow: "L'art de la présence",
+        title: 'Un parfum qui devient entièrement ',
+        accent: 'vôtre.',
+        description: 'Découvrez des Eau de Parfum composées avec soin pour chaque instant, humeur et souvenir.',
+        cta: 'Découvrir les parfums',
+        alt: 'Flacon de parfum élégant'
+      }
+    : {
+        image: '/images/products/iris-minuit.jpg',
+        eyebrow: 'The art of presence',
+        title: 'A fragrance that becomes entirely ',
+        accent: 'yours.',
+        description: 'Discover Eau de Parfum crafted for every moment, mood and memory.',
+        cta: 'Discover perfumes',
+        alt: 'Elegant perfume bottle'
+      };
 
   useEffect(() => {
     api.get('/products?featured=true&limit=4').then((response) => setFeatured(response.data.products)).catch(() => {});
@@ -26,13 +45,19 @@ export default function Home() {
       <section className="overflow-hidden bg-plum text-cream">
         <div className="container-luxury grid min-h-[620px] items-center gap-10 py-20 md:grid-cols-2">
           <motion.div initial={{ opacity: 0, x: -30 }} animate={{ opacity: 1, x: 0 }} transition={{ duration: 0.8, ease: 'easeOut' }}>
-            <p className="eyebrow text-gold">{fr ? "L'art de la présence" : 'The art of presence'}</p>
-            <h1 className="mt-5 max-w-xl font-display text-6xl leading-[.9] sm:text-8xl">{fr ? 'Un parfum qui devient entièrement ' : 'A fragrance that becomes entirely '}<i>{fr ? 'vôtre.' : 'yours.'}</i></h1>
-            <p className="mt-7 max-w-md text-cream/65">{fr ? 'Découvrez des Eau de Parfum composées avec soin pour chaque instant, humeur et souvenir.' : 'Discover Eau de Parfum crafted for every moment, mood and memory.'}</p>
-            <Link to="/perfumes" className="btn-primary mt-9">{fr ? 'Découvrir les parfums' : 'Discover perfumes'} <ArrowRight size={16} className="ml-3" /></Link>
+            <AnimatePresence mode="wait">
+              <motion.div key={language} initial={{ opacity: 0, x: -18 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: 18 }} transition={{ duration: 0.45, ease: 'easeOut' }}>
+                <p className="eyebrow text-gold">{hero.eyebrow}</p>
+                <h1 className="mt-5 max-w-xl font-display text-6xl leading-[.9] sm:text-8xl">{hero.title}<i>{hero.accent}</i></h1>
+                <p className="mt-7 max-w-md text-cream/65">{hero.description}</p>
+                <Link to="/perfumes" className="btn-primary mt-9">{hero.cta} <ArrowRight size={16} className="ml-3" /></Link>
+              </motion.div>
+            </AnimatePresence>
           </motion.div>
           <motion.div initial={{ opacity: 0, scale: 0.96 }} animate={{ opacity: 1, scale: 1 }} transition={{ delay: 0.12, duration: 0.75, ease: 'easeOut' }} className="relative mx-auto max-w-md">
-            <img src="/images/products/noir-sillage.jpg" alt={fr ? 'Flacon de parfum élégant' : 'Elegant perfume bottle'} className="aspect-[4/5] w-full object-cover" />
+            <AnimatePresence mode="wait">
+              <motion.img key={hero.image} initial={{ opacity: 0, scale: 0.94 }} animate={{ opacity: 1, scale: 1 }} exit={{ opacity: 0, scale: 1.04 }} transition={{ duration: 0.55, ease: 'easeOut' }} src={hero.image} alt={hero.alt} className="aspect-[4/5] w-full object-cover" />
+            </AnimatePresence>
           </motion.div>
         </div>
       </section>
